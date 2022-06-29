@@ -1,6 +1,7 @@
 package com.iwdael.annotationprocessorparser
 
 import javax.lang.model.element.Element
+import javax.lang.model.element.Modifier
 import javax.lang.model.element.VariableElement
 
 /**
@@ -15,6 +16,8 @@ class Parameter(element: Element) {
     val owner = "${`package`}.${className}.${methodName}"
     val type = e.asType().toString()
     val name = e.simpleName.toString()
+    val modifiers = e.modifiers
+    fun isModifier(modifier: Modifier) = modifiers.contains(modifier)
     override fun toString(): String {
         return "{" +
                 "package:\"${`package`}\"," +
