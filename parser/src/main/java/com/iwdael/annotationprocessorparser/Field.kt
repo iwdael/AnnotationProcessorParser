@@ -10,7 +10,7 @@ import javax.lang.model.element.VariableElement
  * e-mail : iwdael@outlook.com
  */
 class Field(element: Element) {
-    private val e = element as VariableElement
+    val e = element as VariableElement
     val `package` = e.enclosingElement.enclosingElement.toString()
     val className = e.enclosingElement.simpleName.toString()
     val owner = "${`package`}.${className}"
