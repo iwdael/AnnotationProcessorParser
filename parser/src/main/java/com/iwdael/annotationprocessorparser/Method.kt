@@ -11,7 +11,7 @@ import javax.lang.model.element.Modifier
  * e-mail : iwdael@outlook.com
  */
 class Method(element: Element) {
-    private val e = element as ExecutableElement
+    val e = element as ExecutableElement
     val `package` = e.enclosingElement.enclosingElement.toString()
     val className = e.enclosingElement.simpleName.toString()
     val owner = "${`package`}.${className}"
