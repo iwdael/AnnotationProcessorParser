@@ -10,7 +10,7 @@ import javax.lang.model.element.PackageElement
  */
 class Package(element: Element) {
 
-    private val e = element as PackageElement
+    val e = element as PackageElement
     val name = e.toString()
     val annotation = e.annotationMirrors.map { Annotation(it) }
     val modifiers = e.modifiers
