@@ -9,7 +9,7 @@ import javax.lang.model.element.VariableElement
  * e-mail : iwdael@outlook.com
  */
 class Parameter(element: Element) {
-    private val e = element as  VariableElement
+    val e = element as  VariableElement
     val `package` = e.enclosingElement.enclosingElement.enclosingElement.asType().toString()
     val className = e.enclosingElement.enclosingElement.simpleName.toString()
     val methodName = e.enclosingElement.simpleName.toString()
