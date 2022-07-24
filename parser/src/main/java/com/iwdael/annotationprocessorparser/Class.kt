@@ -12,7 +12,7 @@ import javax.lang.model.element.TypeElement
  * e-mail : iwdael@outlook.com
  */
 class Class(element: Element) {
-    private val e = element as TypeElement
+    val e = element as TypeElement
     val `package` = Package(e.enclosingElement)
     val name = e.simpleName.toString()
     val fields = e.enclosedElements.filter { it.kind == ElementKind.FIELD }.map { Field(it) }
