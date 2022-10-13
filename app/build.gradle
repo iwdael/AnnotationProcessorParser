@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -32,5 +33,6 @@ android {
 }
 
 dependencies {
-    implementation project(":parser")
+    implementation project(":annotation")
+    kapt project(":parser")
 }

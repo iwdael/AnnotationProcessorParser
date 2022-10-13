@@ -8,19 +8,12 @@ import javax.lang.model.element.PackageElement
  * author : iwdael
  * e-mail : iwdael@outlook.com
  */
-class Package(element: Element) {
-
-    val e = element as PackageElement
-    val name = e.toString()
-    val annotation = e.annotationMirrors.map { Annotation(it) }
-    val modifiers = e.modifiers
+class Package(packageElement: Element) {
+    val element = packageElement as PackageElement
+    val name = element.toString()
+    val annotations = element.annotationMirrors.map { Annotation(it) }
+    val modifiers = element.modifiers
     fun isModifier(modifier: Modifier) = modifiers.contains(modifier)
-    override fun toString(): String {
-        return "{" +
-                "name:\"${name}\"," +
-                "annotation:${annotation}" +
-                "}"
-    }
-
-
+    val parent =
+        name.substring(0, if (name.lastIndexOf(".") == -1) name.length else name.lastIndexOf("."))
 }

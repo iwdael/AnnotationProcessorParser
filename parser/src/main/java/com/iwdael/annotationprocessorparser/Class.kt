@@ -11,33 +11,23 @@ import javax.lang.model.element.TypeElement
  * author : iwdael
  * e-mail : iwdael@outlook.com
  */
-class Class(element: Element) {
-    val e = element as TypeElement
-    val `package` = Package(e.enclosingElement)
-    val name = e.simpleName.toString()
-    val fields = e.enclosedElements.filter { it.kind == ElementKind.FIELD }.map { Field(it) }
-    val methods = e.enclosedElements.filter { it.kind == ElementKind.METHOD }.map { Method(it) }
-    val superClass = e.superclass.toString()
-    val interfaces = e.interfaces.map { it.toString() }
-    val annotations = e.annotationMirrors.map { Annotation(it) }
-    val modifiers = e.modifiers
+class Class(typeElement: Element) {
+    val element = typeElement as TypeElement
+    val `package` by lazy { Package(element.enclosingElement) }
+    val className by lazy { element.qualifiedName.toString() }
+    val classSimpleName by lazy { element.simpleName.toString() }
+    val fields by lazy {
+        element.enclosedElements.filter { it.kind == ElementKind.FIELD }.map { Field(it) }
+    }
+    val methods by lazy {
+        element.enclosedElements.filter { it.kind == ElementKind.METHOD }.map { Method(it) }
+    }
+    val superClass by lazy { element.superclass }
+    val interfaces by lazy { element.interfaces }
+    val annotations by lazy { element.annotationMirrors.map { Annotation(it) } }
+    val modifiers by lazy { element.modifiers }
     fun isModifier(modifier: Modifier) = modifiers.contains(modifier)
     fun <A : kotlin.Annotation> getAnnotation(clazz: Class<A>): A? {
-        return e.getAnnotation(clazz)
+        return element.getAnnotation(clazz)
     }
-
-    override fun toString(): String {
-
-        return Format().formatJson("{" +
-                "package:${`package`}," +
-                "name:\"${`name`}\"," +
-                "fields:${`fields`}," +
-                "methods:${`methods`}," +
-                "superClass:\"${`superClass`}\"," +
-                "interfaces:${`interfaces`}," +
-                "annotations:${`annotations`}" +
-                "}")
-    }
-
-
 }
