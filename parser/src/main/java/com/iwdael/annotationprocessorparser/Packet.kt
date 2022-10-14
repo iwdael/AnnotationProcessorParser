@@ -8,7 +8,7 @@ import javax.lang.model.element.PackageElement
  * author : iwdael
  * e-mail : iwdael@outlook.com
  */
-class Package(packageElement: Element) {
+class Packet(packageElement: Element) :Parser{
     val element = packageElement as PackageElement
     val name = element.toString()
     val annotations = element.annotationMirrors.map { Annotation(it) }

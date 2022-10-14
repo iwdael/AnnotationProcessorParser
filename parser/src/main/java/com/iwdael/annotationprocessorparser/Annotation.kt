@@ -7,11 +7,9 @@ import javax.lang.model.element.AnnotationMirror
  * author : iwdael
  * e-mail : iwdael@outlook.com
  */
-class Annotation(mirror: AnnotationMirror) {
+class Annotation(mirror: AnnotationMirror):Parser {
     val element = mirror
-    val className = mirror.annotationType.toString()
-    val values = mirror.elementValues.entries.map { it.key.simpleName to it.value }
-    override fun toString(): String {
-        return "{className:\"${className}\"}"
-    }
+    val className by lazy { mirror.annotationType.toString() }
+    val member by lazy { mirror.elementValues.entries.map { Member (it.key.simpleName.toString() , it.value)  } }
+    class Member(val name: String, val value: Any)
 }

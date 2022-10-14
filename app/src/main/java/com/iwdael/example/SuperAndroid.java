@@ -1,16 +1,24 @@
 package com.iwdael.example;
 
-import com.iwdael.annotation.FieldAnnotation;
-import com.iwdael.annotation.MethodAnnotation;
-import com.iwdael.annotation.ParserAnnotation;
+import com.iwdael.annotations.FieldAnnotation;
+import com.iwdael.annotations.MethodAnnotation;
+import com.iwdael.annotations.ParserAnnotation;
 
 @ParserAnnotation
+@Deprecated
 public class SuperAndroid {
-    @FieldAnnotation
+
+
+    public static final int an = 916;
+    @FieldAnnotation(v1 = 10, v2 = 100)
     String name;
 
-    @MethodAnnotation
+    @MethodAnnotation(v1 = {1, 2, 3, 5, 0}, v2 = "android")
+    @Deprecated
     public String getName(String str) {
-        return name+str;
+        return name + str;
+    }
+
+    public void getNS(int a, int b) {
     }
 }

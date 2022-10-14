@@ -11,9 +11,9 @@ import javax.lang.model.element.TypeElement
  * author : iwdael
  * e-mail : iwdael@outlook.com
  */
-class Class(typeElement: Element) {
+class Class(typeElement: Element) : Parser {
     val element = typeElement as TypeElement
-    val `package` by lazy { Package(element.enclosingElement) }
+    val packet by lazy { Packet(element.enclosingElement) }
     val className by lazy { element.qualifiedName.toString() }
     val classSimpleName by lazy { element.simpleName.toString() }
     val fields by lazy {

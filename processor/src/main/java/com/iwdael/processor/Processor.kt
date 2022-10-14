@@ -1,7 +1,7 @@
 package com.iwdael.processor
 
 import com.google.auto.service.AutoService
-import com.iwdael.annotation.ParserAnnotation
+import com.iwdael.annotations.ParserAnnotation
 import com.iwdael.annotationprocessorparser.Class
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Processor
@@ -22,7 +22,9 @@ class Processor : AbstractProcessor() {
         (env.getElementsAnnotatedWith(ParserAnnotation::class.java) ?: arrayListOf())
             .map { Class(it) }
             .forEach {
-
+                System.err.println("process:${it.className}")
+                JavaMaker(it).make(processingEnv.filer)
+                KtMaker(it).make(processingEnv.filer)
             }
         return false
     }

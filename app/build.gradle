@@ -34,5 +34,5 @@ android {
 
 dependencies {
     implementation project(":annotation")
-    kapt project(":parser")
+    kapt project(":processor")
 }

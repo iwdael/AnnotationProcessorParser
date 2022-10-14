@@ -8,24 +8,14 @@ import javax.lang.model.element.VariableElement
  * author : iwdael
  * e-mail : iwdael@outlook.com
  */
-class Parameter(element: Element) {
-    val e = element as  VariableElement
-    val `package` = e.enclosingElement.enclosingElement.enclosingElement.asType().toString()
-    val className = e.enclosingElement.enclosingElement.simpleName.toString()
-    val methodName = e.enclosingElement.simpleName.toString()
-    val owner = "${`package`}.${className}.${methodName}"
-    val type = e.asType().toString()
-    val name = e.simpleName.toString()
-    val modifiers = e.modifiers
+class Parameter(variableElement: Element) : Parser {
+    val element = variableElement as VariableElement
+    val packet by lazy { Packet(element.enclosingElement.enclosingElement.enclosingElement) }
+    val parentClass by lazy { Class(element.enclosingElement.enclosingElement) }
+    val parentMethod by lazy { Method(element.enclosingElement) }
+    val annotation by lazy { element.annotationMirrors.map { Annotation(it) } }
+    val className by lazy { element.asType().toString() }
+    val name by lazy { element.simpleName.toString() }
+    val modifiers by lazy { element.modifiers }
     fun isModifier(modifier: Modifier) = modifiers.contains(modifier)
-    override fun toString(): String {
-        return "{" +
-                "package:\"${`package`}\"," +
-                "className:\"${`className`}\"," +
-                "methodName:\"${`methodName`}\"," +
-                "owner:\"${owner}\"," +
-                "type:\"${type}\"," +
-                "name:\"${name}\"" +
-                "}"
-    }
 }

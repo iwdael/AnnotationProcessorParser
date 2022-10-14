@@ -5,8 +5,6 @@ apply plugin: 'kotlin-kapt'
 
 
 dependencies {
-    implementation dep.javapoet
-    implementation dep.kotlinpoet
     implementation dep.autoService
     kapt dep.autoService
     implementation project(":parser")

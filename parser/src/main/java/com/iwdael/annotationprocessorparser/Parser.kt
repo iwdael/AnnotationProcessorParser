@@ -1,0 +1,3 @@
+package com.iwdael.annotationprocessorparser
+
+interface Parser
