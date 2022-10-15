@@ -1,12 +1,14 @@
+/**
+ * author : iwdael
+ * e-mail : iwdael@outlook.com
+ * project: https://github.com/iwdael/AnnotationProcessorParser
+ */
+
 package com.iwdael.annotationprocessorparser
 
 
 import javax.lang.model.element.AnnotationMirror
 
-/**
- * author : iwdael
- * e-mail : iwdael@outlook.com
- */
 class Annotation(mirror: AnnotationMirror):Parser {
     val element = mirror
     val className by lazy { mirror.annotationType.toString() }

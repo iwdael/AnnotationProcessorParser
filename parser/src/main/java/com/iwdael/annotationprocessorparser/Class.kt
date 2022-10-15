@@ -1,3 +1,9 @@
+/**
+ * author : iwdael
+ * e-mail : iwdael@outlook.com
+ * project: https://github.com/iwdael/AnnotationProcessorParser
+ */
+
 package com.iwdael.annotationprocessorparser
 
 
@@ -7,10 +13,6 @@ import javax.lang.model.element.ElementKind
 import javax.lang.model.element.Modifier
 import javax.lang.model.element.TypeElement
 
-/**
- * author : iwdael
- * e-mail : iwdael@outlook.com
- */
 class Class(typeElement: Element) : Parser {
     val element = typeElement as TypeElement
     val packet by lazy { Packet(element.enclosingElement) }

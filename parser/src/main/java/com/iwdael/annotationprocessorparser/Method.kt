@@ -1,3 +1,9 @@
+/**
+ * author : iwdael
+ * e-mail : iwdael@outlook.com
+ * project: https://github.com/iwdael/AnnotationProcessorParser
+ */
+
 package com.iwdael.annotationprocessorparser
 
 
@@ -6,10 +12,6 @@ import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.Modifier
 
-/**
- * author : iwdael
- * e-mail : iwdael@outlook.com
- */
 class Method(executableElement: Element) :Parser{
     val element = executableElement as ExecutableElement
     val parent by lazy { Class(element.enclosingElement) }

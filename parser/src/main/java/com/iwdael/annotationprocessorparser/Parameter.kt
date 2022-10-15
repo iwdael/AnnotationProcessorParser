@@ -1,13 +1,15 @@
+/**
+ * author : iwdael
+ * e-mail : iwdael@outlook.com
+ * project: https://github.com/iwdael/AnnotationProcessorParser
+ */
+
 package com.iwdael.annotationprocessorparser
 
 import javax.lang.model.element.Element
 import javax.lang.model.element.Modifier
 import javax.lang.model.element.VariableElement
 
-/**
- * author : iwdael
- * e-mail : iwdael@outlook.com
- */
 class Parameter(variableElement: Element) : Parser {
     val element = variableElement as VariableElement
     val packet by lazy { Packet(element.enclosingElement.enclosingElement.enclosingElement) }
