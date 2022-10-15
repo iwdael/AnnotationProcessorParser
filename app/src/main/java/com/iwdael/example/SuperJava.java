@@ -6,7 +6,7 @@ import com.iwdael.annotations.ParserAnnotation;
 
 @ParserAnnotation
 @Deprecated
-public class SuperAndroid {
+public class SuperJava {
 
 
     public static final int an = 916;

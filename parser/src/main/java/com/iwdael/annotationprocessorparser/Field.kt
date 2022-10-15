@@ -18,7 +18,23 @@ class Field(variableElement: Element) : Parser {
     val value by lazy { element.constantValue }
     val annotation by lazy { element.annotationMirrors.map { Annotation(it) } }
     val modifiers by lazy { element.modifiers }
+    val setter by lazy {
+        parent.methods
+            .filter { it.parameter.size == 1 }
+            .firstOrNull {
+                it.name.replace("set", "").equals(name, true) &&
+                        it.parameter[0].className == className
+            }
+    }
+    val getter by lazy {
+        parent.methods.firstOrNull {
+            it.name.replace("get", "").equals(name, true) &&
+                    it.returnClassName == className
+        }
+    }
+
     fun isModifier(modifier: Modifier) = modifiers.contains(modifier)
+
     fun <A : kotlin.Annotation> getAnnotation(clazz: Class<A>): A? {
         return element.getAnnotation(clazz)
     }

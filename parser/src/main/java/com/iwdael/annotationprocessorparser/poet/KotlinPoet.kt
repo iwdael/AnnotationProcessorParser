@@ -10,21 +10,53 @@ import javax.lang.model.element.Modifier
 
 object KotlinPoet {
 
+    private val javaMapKotlin = listOf(
+        "java.lang.IllegalStateException" to "kotlin.IllegalStateException",
+        "java.lang.NullPointerException" to "kotlin.NullPointerException",
+        "java.lang.StringBuilder" to "kotlin.text.StringBuilder",
+        "java.lang.Integer" to "kotlin.Int",
+        "java.lang.AssertionError" to "kotlin.AssertionError",
+        "java.lang.Iterable" to "kotlin.collections.Iterable",
+        "java.lang.Exception" to "kotlin.Exception",
+        "java.lang.Byte" to "kotlin.Byte",
+        "java.lang.Short" to "kotlin.Short",
+        "java.lang.Void" to "kotlin.Unit",
+        "java.lang.CharSequence" to "kotlin.CharSequence",
+        "java.lang.Deprecated" to "kotlin.Deprecated",
+        "java.lang.IllegalArgumentException" to "kotlin.IllegalArgumentException",
+        "java.lang.Comparable" to "kotlin.Comparable",
+        "java.lang.Float" to "kotlin.Float",
+        "java.lang.Long" to "kotlin.Long",
+        "java.lang.RuntimeException" to "kotlin.RuntimeException",
+        "java.lang.Throwable" to "kotlin.Throwable",
+        "java.lang.ClassCastException" to "kotlin.ClassCastException",
+        "java.lang.String" to "kotlin.String",
+        "java.lang.Number" to "kotlin.Number",
+        "java.lang.Cloneable" to "kotlin.Cloneable",
+        "java.lang.Double" to "kotlin.Double",
+        "java.lang.Enum" to "kotlin.Enum",
+        "java.lang.NumberFormatException" to "kotlin.NumberFormatException",
+        "java.lang.Boolean" to "kotlin.Boolean",
+        "java.lang.Error" to "kotlin.Error",
+        "java.lang.ArithmeticException" to "kotlin.ArithmeticException",
+        "java.lang.UnsupportedOperationException" to "kotlin.UnsupportedOperationException",
+        "java.lang.IndexOutOfBoundsException" to "kotlin.IndexOutOfBoundsException"
+    )
+
     fun Class.asFileBuilder(packageExt: String = "", fileNameExt: String = ""): FileSpec.Builder {
         return FileSpec.builder(packet.name + packageExt, classSimpleName + fileNameExt)
     }
 
-    fun Set<Modifier>.asKModifier(): Array<KModifier> {
+    fun Set<Modifier>.asKotlin(): Array<KModifier> {
         return this.filter {
             it != Modifier.TRANSIENT
                     && it != Modifier.VOLATILE
                     && it != Modifier.SYNCHRONIZED
                     && it != Modifier.NATIVE
                     && it != Modifier.STRICTFP
+                    && it != Modifier.PUBLIC
         }.map {
-            return@map if (it == Modifier.PUBLIC) {
-                KModifier.PUBLIC
-            } else if (it == Modifier.PROTECTED) {
+            return@map if (it == Modifier.PROTECTED) {
                 KModifier.PROTECTED
             } else if (it == Modifier.PRIVATE) {
                 KModifier.PRIVATE
@@ -43,12 +75,24 @@ object KotlinPoet {
         return this as ClassName
     }
 
+    fun TypeName.asKotlin(): TypeName {
+        val pair = javaMapKotlin.filter { this.toString() == it.first }.firstOrNull() ?: return this
+        return ClassName.bestGuess(pair.second)
+    }
+
     /**
      * Annotation
      */
 
+    fun List<Annotation>.asKotlin(): List<Annotation> {
+        return this
+            .filter { it.className != Metadata::class.java.name }
+            .filter { !it.className.endsWith("NotNull") }
+            .filter { !it.className.endsWith("Nullable") }
+    }
+
     fun Annotation.asTypeName(): TypeName {
-        return element.annotationType.asTypeName()
+        return element.annotationType.asTypeName().asKotlin()
     }
 
     fun Annotation.asAnnotation(): AnnotationSpec {
@@ -62,7 +106,7 @@ object KotlinPoet {
     }
 
     fun AnnotationSpec.Builder.stickMembers(): AnnotationSpec.Builder {
-        parser().member.forEach { addMember("${it.name} = %S", "${it.value}") }
+        parser().member.forEach { addMember("${it.name} = %L", "${it.value}") }
         return this
     }
 
@@ -75,7 +119,7 @@ object KotlinPoet {
      */
 
     fun Class.asTypeName(): TypeName {
-        return element.asClassName()
+        return element.asClassName().asKotlin()
     }
 
     fun Class.asTypeBuilder(ext: String = ""): TypeSpec.Builder {
@@ -85,12 +129,12 @@ object KotlinPoet {
     }
 
     fun TypeSpec.Builder.stickAnnotation(): TypeSpec.Builder {
-        addAnnotations(parser().annotations.map { it.asAnnotation() })
+        addAnnotations(parser().annotations.asKotlin().map { it.asAnnotation() })
         return this
     }
 
     fun TypeSpec.Builder.stickModifier(): TypeSpec.Builder {
-        addModifiers(*parser().modifiers.asKModifier())
+        addModifiers(*parser().modifiers.asKotlin())
         return this
     }
 
@@ -105,7 +149,7 @@ object KotlinPoet {
 
     fun Field.asTypeName(): TypeName {
         val parser = this
-        return element.asType().asTypeName()
+        return element.asType().asTypeName().asKotlin()
             .copy(!(annotation.any { it.className.endsWith("NotNull") }
                     || !parser.className.contains(".")))
     }
@@ -128,12 +172,12 @@ object KotlinPoet {
     }
 
     fun PropertySpec.Builder.stickModifier(): PropertySpec.Builder {
-        addModifiers(*parser().modifiers.asKModifier())
+        addModifiers(*parser().modifiers.asKotlin())
         return this
     }
 
     fun PropertySpec.Builder.stickAnnotation(): PropertySpec.Builder {
-        addAnnotations(parser().annotation.map { it.asAnnotation() })
+        addAnnotations(parser().annotation.asKotlin().map { it.asAnnotation() })
         return this
     }
 
@@ -173,17 +217,17 @@ object KotlinPoet {
     }
 
     fun FunSpec.Builder.stickAnnotation(): FunSpec.Builder {
-        addAnnotations(parser().annotation.map { it.asAnnotation() })
+        addAnnotations(parser().annotation.asKotlin().map { it.asAnnotation() })
         return this
     }
 
     fun FunSpec.Builder.stickModifier(): FunSpec.Builder {
-        addModifiers(*parser().modifiers.asKModifier())
+        addModifiers(*parser().modifiers.asKotlin())
         return this
     }
 
     fun FunSpec.Builder.stickReturn(): FunSpec.Builder {
-        returns(parser().element.returnType.asTypeName())
+        returns(parser().element.returnType.asTypeName().asKotlin())
         return this
     }
 
@@ -198,7 +242,7 @@ object KotlinPoet {
 
     fun Parameter.asTypeName(): TypeName {
         val parser = this
-        return element.asType().asTypeName()
+        return element.asType().asTypeName().asKotlin()
             .copy(!(annotation.any { it.className.endsWith("NotNull") }
                     || !parser.className.contains(".")))
     }
@@ -214,7 +258,7 @@ object KotlinPoet {
     }
 
     fun ParameterSpec.Builder.stickModifier(): ParameterSpec.Builder {
-        addModifiers(* parser().modifiers.asKModifier())
+        addModifiers(* parser().modifiers.asKotlin())
         return this
     }
 
