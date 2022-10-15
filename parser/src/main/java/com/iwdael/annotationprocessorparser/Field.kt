@@ -18,17 +18,22 @@ class Field(variableElement: Element) : Parser {
     val value by lazy { element.constantValue }
     val annotation by lazy { element.annotationMirrors.map { Annotation(it) } }
     val modifiers by lazy { element.modifiers }
-    val setter by lazy {
+    val setter by lazy { setterOrNull ?:throw IllegalArgumentException("Can not found setter(${parent.className}.${name})") }
+    val setterOrNull by lazy {
         parent.methods
             .filter { it.parameter.size == 1 }
             .firstOrNull {
-                it.name.replace("set", "").equals(name, true) &&
+                (it.name.replaceFirst("set", "").equals(name, true) ||
+                        it.name.replaceFirst("set", "").equals(name.replaceFirst("is",""), true)
+                        ) &&
                         it.parameter[0].className == className
             }
     }
-    val getter by lazy {
+
+    val getter by lazy { getterOrNull?:throw IllegalArgumentException("Can not found getter(${parent.className}.${name})") }
+    val getterOrNull by lazy {
         parent.methods.firstOrNull {
-            it.name.replace("get", "").equals(name, true) &&
+            it.name.replaceFirst("get", "").equals(name.replaceFirst("is",""), true) &&
                     it.returnClassName == className
         }
     }
