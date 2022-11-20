@@ -28,11 +28,16 @@ class Field(variableElement: Element) : Parser {
         parent.methods
             .filter { it.parameter.size == 1 }
             .firstOrNull {
-                (it.name.replaceFirst("set", "").equals(name, true) ||
+                (
+                        it.name.replaceFirst("set", "").equals(name, true) ||
                         it.name.replaceFirst("set", "").equals(name.replaceFirst("is", ""), true) ||
                         it.name.equals(name, true)
-                        ) &&
+
+                )
+                &&
+                (
                         it.parameter[0].className == className
+                )
             }
     }
 
@@ -42,11 +47,17 @@ class Field(variableElement: Element) : Parser {
     }
     val getterOrNull by lazy {
         parent.methods.firstOrNull {
-            (it.name.replaceFirst("get", "").equals(name, true) ||
+            (
+                    it.name.replaceFirst("get", "").equals(name, true) ||
+                    it.name.replaceFirst("is", "").equals(name, true) ||
                     it.name.replaceFirst("get", "").equals(name.replaceFirst("is", ""), true) ||
+                    it.name.replaceFirst("is", "").equals(name.replaceFirst("is", ""), true) ||
                     it.name.equals(name, true)
-                    ) &&
+            )
+            &&
+            (
                     it.returnClassName == className
+            )
         }
     }
 
